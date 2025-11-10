@@ -16,7 +16,7 @@ public class AttackCooldownScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && !CooldownActive)
+        if (Input.GetKeyDown(KeyCode.O) && !CooldownActive)
         {
             CooldownActive = true;
             print("hey hey hey the cooldown has been activated");

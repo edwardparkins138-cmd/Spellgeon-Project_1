@@ -12,16 +12,18 @@ namespace EasyPeasyFirstPersonController
     {
 
         // dash stuff xd
-        public float dashFOV = 85f;
-        public float dashDuration = 0.45f;
-        public bool isDashing = false;
-        public bool canDash = false;
-        public float ongoingDashTime = 0f;
-        public KeyCode dashKeybind = KeyCode.X;
-        public Vector3 dashDirection;
-        public float currentDashSpeed = 0f;
-        public float dashCooldown = 3000f;
-        public bool dashOnCooldown = false;
+        public bool IsDashing = false;
+        public bool CanDash = false;
+        public bool DashCooldownActive = false;
+
+        public float DashDuration = 1f;
+        public float OngoingDashTime = 0f;
+        public float DashSpeed = 0f;
+        public float DashSpeedMultiplier = 1.3f;
+
+        public Vector3 DashDirection = Vector3.zero;
+        public KeyCode DashKeybind = KeyCode.Q;
+        // end of dash stuff
 
         [Range(0, 100)] public float mouseSensitivity = 50f;
         [Range(0f, 200f)] private float snappiness = 100f;
@@ -171,7 +173,7 @@ namespace EasyPeasyFirstPersonController
                 isCrouching = canCrouch && (wantsToCrouch || (hasCeiling && !isSliding));
             }
 
-            if (isDashing) { CoreDashMechanic(); }
+            if (IsDashing) { CoreDashMechanic(); }
             else { WantsToDashChecker(); }
 
             if (canSlide && isSprinting && Input.GetKeyDown(KeyCode.LeftControl) && isGrounded)
@@ -264,7 +266,7 @@ namespace EasyPeasyFirstPersonController
         {
             moveInput.x = Input.GetAxis("Horizontal");
             moveInput.y = Input.GetAxis("Vertical");
-            isSprinting = canSprint && Input.GetKey(KeyCode.LeftShift) && moveInput.y > 0.1f && isGrounded && !isCrouching && !isSliding;
+            isSprinting = canSprint && Input.GetKey(KeyCode.LeftShift) && moveInput.y > 0.1f && isGrounded && !isCrouching && !isSliding && !IsDashing;
 
             float currentSpeed = isCrouching ? crouchSpeed : (isSprinting ? sprintSpeed : walkSpeed);
             if (!isMove) currentSpeed = 0f;
@@ -275,7 +277,7 @@ namespace EasyPeasyFirstPersonController
 
             if (isGrounded || coyoteTimer > 0f)
             {
-                if (canJump && Input.GetKeyDown(KeyCode.Space) && !isSliding && !isDashing)
+                if (canJump && Input.GetKeyDown(KeyCode.Space) && !isSliding && !IsDashing)
                 {
                     moveDirection.y = jumpSpeed;
                 }
@@ -318,54 +320,39 @@ namespace EasyPeasyFirstPersonController
             Cursor.visible = newVisibility;
         }
 
-        // attempt 2, i really odnt like c# its very mean ):
+        // THIRD TIMES THE CHARM im losing it
         public void CoreDashMechanic()
         {
-            if (!isDashing)
+            if (!IsDashing)
             {
-                print("dash active!");
-                isDashing = true;
-                canDash = false;
-                ongoingDashTime = dashDuration;
-                currentDashSpeed = sprintSpeed * 1.2f;
+                IsDashing = true;
+                DashCooldownActive = true;
+                DashDirection = moveInput.magnitude > 0.1f ? (transform.right * moveInput.x + transform.forward * moveInput.y).normalized : transform.forward;
+                OngoingDashTime = DashDuration;
+                DashSpeed = sprintSpeed * DashSpeedMultiplier;
 
-                dashDirection = moveInput.magnitude > 0.1f ? (transform.right * moveInput.x + transform.forward * moveInput.y).normalized : transform.forward;
-                characterController.Move(dashDirection * currentDashSpeed);
             }
 
-            if (isDashing)
+            if (IsDashing)
             {
-                //print("ongoingDashTime Val:" + ongoingDashTime);
-                //print("dashDuration Val: " + dashDuration);
-
-                // this is worse than my roblox studio code from 2022, and thats saying something.
-                ongoingDashTime -= Time.deltaTime;
-                if (ongoingDashTime <= 0)
-                {
-                    print("cooldown began!");
-                    isDashing = true;
-                    dashOnCooldown = true;
-
-                    dashOnCooldown = false;
-                    isDashing = false;
-                    print("cooldown ended!");
-                }
+                OngoingDashTime -= Time.deltaTime;
+                if (OngoingDashTime < 0)
+                { IsDashing = false; DashCooldownActive = false; }
+                characterController.Move(DashDirection * DashSpeed * Time.deltaTime);
             }
         }
 
         public void WantsToDashChecker()
         {
-            // candash reqs
-            if (isSprinting && isGrounded && !isDashing && !dashOnCooldown)
+            // CanDash reqs
+            if (isSprinting && isGrounded && !IsDashing && !DashCooldownActive)
             { 
-                canDash = true;
-                if (canDash && Input.GetKeyDown(dashKeybind) && !isDashing)
-                {
-                    CoreDashMechanic();
-                }
+                CanDash = true;
+                if (CanDash && Input.GetKeyDown(DashKeybind) && !IsDashing)
+                { CoreDashMechanic(); }
             }
             else
-            { canDash = false; }
+            { CanDash = false; }
         }
     }
 }
