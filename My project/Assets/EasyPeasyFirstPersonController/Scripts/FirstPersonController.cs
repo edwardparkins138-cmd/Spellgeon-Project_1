@@ -275,7 +275,7 @@ namespace EasyPeasyFirstPersonController
 
             if (isGrounded || coyoteTimer > 0f)
             {
-                if (canJump && Input.GetKeyDown(KeyCode.Space) && !isSliding)
+                if (canJump && Input.GetKeyDown(KeyCode.Space) && !isSliding && !isDashing)
                 {
                     moveDirection.y = jumpSpeed;
                 }
@@ -318,24 +318,19 @@ namespace EasyPeasyFirstPersonController
             Cursor.visible = newVisibility;
         }
 
-        IEnumerator CommenceCooldown()
-        {
-            yield return new WaitForSeconds(dashCooldown);
-        }
-
         // attempt 2, i really odnt like c# its very mean ):
         public void CoreDashMechanic()
         {
             if (!isDashing)
             {
-                print("active!");
+                print("dash active!");
                 isDashing = true;
                 canDash = false;
                 ongoingDashTime = dashDuration;
-                currentDashSpeed = sprintSpeed * 2;
+                currentDashSpeed = sprintSpeed * 1.2f;
 
-              //  dashDirection = moveInput.magnitude > 0.1f ? (transform.right * moveInput.x + transform.forward * moveInput.y).normalized : transform.forward;
-              //  characterController.Move(dashDirection * currentDashSpeed * Time.deltaTime);
+                dashDirection = moveInput.magnitude > 0.1f ? (transform.right * moveInput.x + transform.forward * moveInput.y).normalized : transform.forward;
+                characterController.Move(dashDirection * currentDashSpeed);
             }
 
             if (isDashing)
@@ -347,12 +342,13 @@ namespace EasyPeasyFirstPersonController
                 ongoingDashTime -= Time.deltaTime;
                 if (ongoingDashTime <= 0)
                 {
-                    print("cooldown!");
-                    isDashing = false;
+                    print("cooldown began!");
+                    isDashing = true;
                     dashOnCooldown = true;
-                    StartCoroutine(CommenceCooldown());
+
                     dashOnCooldown = false;
-                    print("ended!");
+                    isDashing = false;
+                    print("cooldown ended!");
                 }
             }
         }
@@ -361,13 +357,15 @@ namespace EasyPeasyFirstPersonController
         {
             // candash reqs
             if (isSprinting && isGrounded && !isDashing && !dashOnCooldown)
-            { canDash = true; }
+            { 
+                canDash = true;
+                if (canDash && Input.GetKeyDown(dashKeybind) && !isDashing)
+                {
+                    CoreDashMechanic();
+                }
+            }
             else
             { canDash = false; }
-            if (canDash && Input.GetKeyDown(dashKeybind) && !isDashing)
-            {
-                CoreDashMechanic();
-            }
         }
     }
 }
