@@ -19,7 +19,9 @@ namespace EasyPeasyFirstPersonController
         public float DashDuration = 1f;
         public float OngoingDashTime = 0f;
         public float DashSpeed = 0f;
-        public float DashSpeedMultiplier = 1.75f;
+        public float DashSpeedMultiplier = 1.65f;
+        public float DashCooldown = 1.5f;
+        public float DashFOV = 85f;
 
         public Vector3 DashDirection = Vector3.zero;
         public KeyCode DashKeybind = KeyCode.Q;
@@ -323,7 +325,7 @@ namespace EasyPeasyFirstPersonController
         IEnumerator CommenceCooldown()
         {
             print("cd");
-            yield return new WaitForSeconds(3f);
+            yield return new WaitForSeconds(DashCooldown);
             print("cd done");
             DashCooldownActive = false;
         }
@@ -344,10 +346,12 @@ namespace EasyPeasyFirstPersonController
             if (IsDashing)
             {
                 OngoingDashTime -= Time.deltaTime;
+                currentFov = DashFOV;
                 if (OngoingDashTime < 0)
                 { 
                     IsDashing = false;
                     StartCoroutine(CommenceCooldown());
+                    currentFov = normalFov;
                 }
                 characterController.Move(DashDirection * DashSpeed * Time.deltaTime);
             }
