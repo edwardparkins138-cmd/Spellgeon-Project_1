@@ -19,7 +19,7 @@ namespace EasyPeasyFirstPersonController
         public float DashDuration = 1f;
         public float OngoingDashTime = 0f;
         public float DashSpeed = 0f;
-        public float DashSpeedMultiplier = 1.3f;
+        public float DashSpeedMultiplier = 1.75f;
 
         public Vector3 DashDirection = Vector3.zero;
         public KeyCode DashKeybind = KeyCode.Q;
