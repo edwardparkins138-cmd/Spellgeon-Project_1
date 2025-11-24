@@ -328,7 +328,7 @@ namespace EasyPeasyFirstPersonController
             DashCooldownActive = false;
         }
 
-        // THIRD TIMES THE CHARM im losing it
+        // THIRD TIMES THE CHARM im losing it -- UPDATE IT WORKS YAYYYY!!!!
         public void CoreDashMechanic()
         {
             if (!IsDashing)
