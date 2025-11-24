@@ -1,19 +1,15 @@
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem.Interactions;
+using System.Collections;
+using System.Collections.Generic;
 
 public class Teleporter : MonoBehaviour
 {
-    public GameObject TeleporterBlock1;
-    public GameObject TeleporterBlock2;
+    public Transform TeleportTo;
+    public GameObject PlayerObject;
 
-    private void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        print("ok");
-        if (collision.gameObject == TeleporterBlock1)
-        {
-            print(":tp all me");
-            this.transform.position = TeleporterBlock2.transform.position;
-        }
+        print("Ok");
+        PlayerObject.transform.position = TeleportTo.transform.position;
     }
 }
