@@ -320,6 +320,14 @@ namespace EasyPeasyFirstPersonController
             Cursor.visible = newVisibility;
         }
 
+        IEnumerator CommenceCooldown()
+        {
+            print("cd");
+            yield return new WaitForSeconds(3f);
+            print("cd done");
+            DashCooldownActive = false;
+        }
+
         // THIRD TIMES THE CHARM im losing it
         public void CoreDashMechanic()
         {
@@ -337,7 +345,10 @@ namespace EasyPeasyFirstPersonController
             {
                 OngoingDashTime -= Time.deltaTime;
                 if (OngoingDashTime < 0)
-                { IsDashing = false; DashCooldownActive = false; }
+                { 
+                    IsDashing = false;
+                    StartCoroutine(CommenceCooldown());
+                }
                 characterController.Move(DashDirection * DashSpeed * Time.deltaTime);
             }
         }
