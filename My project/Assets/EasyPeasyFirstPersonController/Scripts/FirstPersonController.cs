@@ -324,9 +324,7 @@ namespace EasyPeasyFirstPersonController
 
         IEnumerator CommenceCooldown()
         {
-            print("cd");
             yield return new WaitForSeconds(DashCooldown);
-            print("cd done");
             DashCooldownActive = false;
         }
 
