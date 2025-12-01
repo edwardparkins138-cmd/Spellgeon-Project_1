@@ -345,7 +345,7 @@ namespace EasyPeasyFirstPersonController
             {
                 OngoingDashTime -= Time.deltaTime;
                 currentFov = DashFOV;
-                if (OngoingDashTime < 0)
+                if (OngoingDashTime <= 0)
                 { 
                     IsDashing = false;
                     StartCoroutine(CommenceCooldown());
@@ -366,6 +366,13 @@ namespace EasyPeasyFirstPersonController
             }
             else
             { CanDash = false; }
+        }
+
+       void OnCollisionEnter(Collision col)
+        {
+            Debug.Log("OK");
+            if (col.gameObject.CompareTag("CancelDash_Wall") && IsDashing)
+            { OngoingDashTime = 0; }
         }
     }
 }
