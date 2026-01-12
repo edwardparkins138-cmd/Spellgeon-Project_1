@@ -24,7 +24,7 @@ namespace EasyPeasyFirstPersonController
         public float DashFOV = 85f;
 
         public Vector3 DashDirection = Vector3.zero;
-        public KeyCode DashKeybind = KeyCode.Q;
+        public KeyCode DashKeybind = KeyCode.X;
         // end of dash stuff
 
         [Range(0, 100)] public float mouseSensitivity = 50f;
