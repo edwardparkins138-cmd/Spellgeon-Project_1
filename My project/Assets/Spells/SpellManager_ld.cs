@@ -9,7 +9,7 @@ public class SpellManager : MonoBehaviour
 {
 
     private static Dictionary<int, string> spellsName = new Dictionary<int, string>();
-    private static Dictionary<int, GameObject> spellColours = new Dictionary<int, GameObject>();
+    private static Dictionary<int, Color> spellColours = new Dictionary<int, Color>();
     private int spellIndex = 1;
 
     private float Cooldown = 1;
@@ -24,26 +24,24 @@ public class SpellManager : MonoBehaviour
         CooldownActive = false;
     }
 
-    private static void CreateSpell(string spellName, int spellIndex)
+    private static void CreateSpell(string spellName, int spellIndex, Color colour)
     {
         spellsName.Add(spellIndex, spellName);
-        //spellColours.Add(spellIndex, colour);
+        spellColours.Add(spellIndex, colour);
     }
 
     void Start()
     {
-        Debug.Log("Hello");
         // Value 1 | Name - Value 2 | Index - Value 3 | Colour
-        CreateSpell("Psychic", 1);
-        CreateSpell("Fire", 2);
-        CreateSpell("Water", 3);
+        CreateSpell("Nature", 1, Color.green);
+        CreateSpell("Fire", 2, Color.red);
+        CreateSpell("Water", 3, Color.blue);
+        CreateSpell("Psychic", 4, Color.rebeccaPurple);
 
-        Debug.Log("Created spells!");
     }
 
     void Update()
     {
-        Debug.Log("is this running?");
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
@@ -65,11 +63,12 @@ public class SpellManager : MonoBehaviour
         {
             CooldownActive = true;
 
-            var bullet = Instantiate(bulletPrefabObj, bulletStartPos.position + transform.forward, bulletStartPos.rotation);
-            bullet.GetComponent<Rigidbody>().linearVelocity = bulletStartPos.forward * bulletSpeed;
+            var magicBullet = Instantiate(bulletPrefabObj, bulletStartPos.position + transform.forward, bulletStartPos.rotation);
+            magicBullet.GetComponent<Rigidbody>().linearVelocity = bulletStartPos.forward * bulletSpeed;
+            magicBullet.GetComponent<Renderer>().material.SetColor("_BaseColor", spellColours[spellIndex]);
+            magicBullet.name = spellsName[spellIndex];
 
             StartCoroutine(StartCooldown());
         }
-        Debug.Log(spellsName[spellIndex]);
     }
 }
