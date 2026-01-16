@@ -155,7 +155,7 @@ namespace EasyPeasyFirstPersonController
 
             HandleHeadBob();
 
-            bool wantsToCrouch = canCrouch && Input.GetKey(KeyCode.LeftControl) && !isSliding;
+            bool wantsToCrouch = canCrouch && Input.GetKey(KeyCode.LeftControl) && !isSliding && !IsDashing;
             Vector3 point1 = transform.position + characterController.center - Vector3.up * (characterController.height * 0.5f);
             Vector3 point2 = point1 + Vector3.up * characterController.height * 0.6f;
             float capsuleRadius = characterController.radius * 0.95f;
