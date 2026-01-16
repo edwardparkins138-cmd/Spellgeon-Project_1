@@ -48,6 +48,7 @@ public class SpellManager : MonoBehaviour
     void Update()
     {
         spellTextDisplayer.text = spellsName[spellIndex];
+        spellTextDisplayer.color = spellColours[spellIndex];
         if (Input.GetKeyDown(KeyCode.Q))
         {
             spellIndex -= 1;
