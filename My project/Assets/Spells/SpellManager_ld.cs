@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using TMPro;
 using static UnityEditor.Progress;
 
 public class SpellManager : MonoBehaviour
 {
-
     private static Dictionary<int, string> spellsName = new Dictionary<int, string>();
     private static Dictionary<int, Color> spellColours = new Dictionary<int, Color>();
     private int spellIndex = 1;
@@ -17,7 +18,9 @@ public class SpellManager : MonoBehaviour
 
     public Transform bulletStartPos;
     public GameObject bulletPrefabObj;
-    public float bulletSpeed = 15;
+    public float bulletSpeed = 20;
+
+    public TMP_Text spellTextDisplayer;
     IEnumerator StartCooldown()
     {
         yield return new WaitForSeconds(Cooldown);
@@ -26,12 +29,14 @@ public class SpellManager : MonoBehaviour
 
     private static void CreateSpell(string spellName, int spellIndex, Color colour)
     {
+        if (spellsName.ContainsKey(spellIndex))  { return; }
         spellsName.Add(spellIndex, spellName);
         spellColours.Add(spellIndex, colour);
     }
 
     void Start()
     {
+
         // Value 1 | Name - Value 2 | Index - Value 3 | Colour
         CreateSpell("Nature", 1, Color.green);
         CreateSpell("Fire", 2, Color.red);
@@ -42,7 +47,7 @@ public class SpellManager : MonoBehaviour
 
     void Update()
     {
-
+        spellTextDisplayer.text = spellsName[spellIndex];
         if (Input.GetKeyDown(KeyCode.Q))
         {
             spellIndex -= 1;
@@ -59,6 +64,7 @@ public class SpellManager : MonoBehaviour
                 spellIndex = 1;
             }
         }
+
         else if (Input.GetKeyDown(KeyCode.Mouse0) && !CooldownActive)
         {
             CooldownActive = true;
