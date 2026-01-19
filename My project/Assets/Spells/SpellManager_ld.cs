@@ -73,6 +73,7 @@ public class SpellManager : MonoBehaviour
             var magicBullet = Instantiate(bulletPrefabObj, bulletStartPos.position + transform.forward, bulletStartPos.rotation);
             magicBullet.GetComponent<Rigidbody>().linearVelocity = bulletStartPos.forward * bulletSpeed;
             magicBullet.GetComponent<Renderer>().material.SetColor("_BaseColor", spellColours[spellIndex]);
+            magicBullet.GetComponent<NewMonoBehaviourScript>().isPlayerOwned = true;
             magicBullet.name = spellsName[spellIndex];
 
             StartCoroutine(StartCooldown());
