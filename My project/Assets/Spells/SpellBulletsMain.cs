@@ -34,7 +34,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
         }
         else
         {
-            if (collision.gameObject.name == "FirstPersonController")
+            if (collision.gameObject.CompareTag("Player"))
             {
                 Destroy(gameObject);
             }
