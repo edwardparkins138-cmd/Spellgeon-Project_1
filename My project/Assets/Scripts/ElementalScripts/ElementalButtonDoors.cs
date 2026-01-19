@@ -5,6 +5,6 @@ public class ElementalButtonDoors : MonoBehaviour
 
     public void DestroyParentObject()
     {
-        Destroy(gameObject.transform.parent.gameObject);
+        gameObject.transform.parent.gameObject.SetActive(false);
     }
 }

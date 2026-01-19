@@ -19,7 +19,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
         {
             if (collision.gameObject.name == gameObject.name + "_ElementWall")
             {
-                Destroy(collision.gameObject);
+                collision.gameObject.SetActive(false);
                 Destroy(gameObject);
             }
             else if (collision.gameObject.name == gameObject.name + "_ElementButton")

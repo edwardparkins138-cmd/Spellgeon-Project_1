@@ -11,6 +11,8 @@ namespace EasyPeasyFirstPersonController
     public partial class FirstPersonController : MonoBehaviour
     {
 
+        public int checkpoint = 1;
+
         // dash stuff xd
         public bool IsDashing = false;
         public bool CanDash = false;
@@ -24,7 +26,7 @@ namespace EasyPeasyFirstPersonController
         public float DashFOV = 85f;
 
         public Vector3 DashDirection = Vector3.zero;
-        public KeyCode DashKeybind = KeyCode.X;
+        public KeyCode DashKeybind = KeyCode.F;
         // end of dash stuff
 
         [Range(0, 100)] public float mouseSensitivity = 50f;
@@ -119,7 +121,7 @@ namespace EasyPeasyFirstPersonController
             rotX = transform.rotation.eulerAngles.y;
             rotY = playerCamera.localRotation.eulerAngles.x;
             xVelocity = rotX;
-            yVelocity = rotY;
+            yVelocity = rotY;;
         }
 
         private void Update()
