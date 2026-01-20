@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CancelDash_Wall
   - Enemy
+  - SpellsHolder
   layers:
   - Default
   - TransparentFX

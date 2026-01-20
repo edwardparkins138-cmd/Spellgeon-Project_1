@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-using static UnityEditor.Progress;
+//using static UnityEditor.Progress;
 
 public class SpellManager : MonoBehaviour
 {
@@ -19,6 +19,8 @@ public class SpellManager : MonoBehaviour
     public Transform bulletStartPos;
     public GameObject bulletPrefabObj;
     public float bulletSpeed = 20;
+
+    public Transform spellsCastedObj;
 
     public TMP_Text spellTextDisplayer;
     IEnumerator StartCooldown()
@@ -74,6 +76,7 @@ public class SpellManager : MonoBehaviour
             magicBullet.GetComponent<Rigidbody>().linearVelocity = bulletStartPos.forward * bulletSpeed;
             magicBullet.GetComponent<Renderer>().material.SetColor("_BaseColor", spellColours[spellIndex]);
             magicBullet.GetComponent<NewMonoBehaviourScript>().isPlayerOwned = true;
+            magicBullet.transform.parent = spellsCastedObj;
             magicBullet.name = spellsName[spellIndex];
 
             StartCoroutine(StartCooldown());
