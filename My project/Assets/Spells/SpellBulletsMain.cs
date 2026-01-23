@@ -20,24 +20,24 @@ public class NewMonoBehaviourScript : MonoBehaviour
             if (collision.gameObject.name == gameObject.name + "_ElementWall")
             {
                 collision.gameObject.SetActive(false);
-                Destroy(gameObject);
             }
             else if (collision.gameObject.name == gameObject.name + "_ElementButton")
             {
                 collision.gameObject.GetComponent<ElementalButtonDoors>().DestroyParentObject();
-                Destroy(gameObject);
             }
             else if (collision.gameObject.name == "Enemy")
-            {
-                Destroy(gameObject);
+            {;
             }
         }
         else
         {
             if (collision.gameObject.CompareTag("Player"))
-            {
-                Destroy(gameObject);
+            {;
             }
+        }
+        if (!collision.gameObject.CompareTag("Player") && !collision.gameObject.CompareTag("SpellFriendly")) 
+        {
+            Destroy(gameObject);
         }
     }
 }

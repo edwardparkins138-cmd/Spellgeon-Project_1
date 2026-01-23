@@ -7,6 +7,7 @@ TagManager:
   - CancelDash_Wall
   - Enemy
   - SpellsHolder
+  - SpellFriendly
   layers:
   - Default
   - TransparentFX
