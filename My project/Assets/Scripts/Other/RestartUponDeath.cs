@@ -24,6 +24,7 @@ public class RestartUponDeath : MonoBehaviour
             }
 
             other.gameObject.transform.position = checkpointsFolder.transform.Find(other.gameObject.GetComponent<FirstPersonController>().checkpoint.ToString()).transform.position;
+            other.gameObject.GetComponent<FirstPersonController>().OngoingDashTime = 0;
         }
     }
 

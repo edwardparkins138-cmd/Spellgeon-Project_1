@@ -3,6 +3,7 @@ namespace EasyPeasyFirstPersonController
     using System;
     using System.Collections;
     using System.Runtime.CompilerServices;
+    using TMPro;
     using Unity.VisualScripting;
     //using UnityEditor.Experimental.GraphView;
     using UnityEngine;
@@ -18,21 +19,23 @@ namespace EasyPeasyFirstPersonController
         public bool CanDash = false;
         public bool DashCooldownActive = false;
 
-        public float DashDuration = 1f;
+        private float DashDuration = 1f;
         public float OngoingDashTime = 0f;
-        public float DashSpeed = 0f;
-        public float DashSpeedMultiplier = 1.65f;
-        public float DashCooldown = 1.5f;
-        public float DashFOV = 85f;
+        private float DashSpeed = 0f;
+        private float DashSpeedMultiplier = 2.5f;
+        private float DashCooldown = 1.5f;
+        private float DashFOV = 85f;
 
-        public Vector3 DashDirection = Vector3.zero;
-        public KeyCode DashKeybind = KeyCode.F;
+        public TMP_Text DashCooldownUI;
+
+        private Vector3 DashDirection = Vector3.zero;
+        private KeyCode DashKeybind = KeyCode.F;
         // end of dash stuff
 
         [Range(0, 100)] public float mouseSensitivity = 50f;
         [Range(0f, 200f)] private float snappiness = 100f;
-        [Range(0f, 20f)] public float walkSpeed = 3f;
-        [Range(0f, 30f)] public float sprintSpeed = 5f;
+        [Range(0f, 20f)] public float walkSpeed = 4f;
+        [Range(0f, 30f)] public float sprintSpeed = 6f;
         [Range(0f, 10f)] public float crouchSpeed = 1.5f;
         public float crouchHeight = 1f;
         public float crouchCameraHeight = 1f;
@@ -270,7 +273,7 @@ namespace EasyPeasyFirstPersonController
         {
             moveInput.x = Input.GetAxis("Horizontal");
             moveInput.y = Input.GetAxis("Vertical");
-            isSprinting = canSprint && Input.GetKey(KeyCode.LeftShift) && moveInput.y > 0.1f && isGrounded && !isCrouching && !isSliding && !IsDashing;
+            isSprinting = canSprint && Input.GetKey(KeyCode.LeftShift) && moveInput.y > 0.1f && !isCrouching && !isSliding && !IsDashing;
 
             float currentSpeed = isCrouching ? crouchSpeed : (isSprinting ? sprintSpeed : walkSpeed);
             if (!isMove) currentSpeed = 0f;
@@ -297,7 +300,14 @@ namespace EasyPeasyFirstPersonController
 
             if (!isSliding)
             {
-                moveDirection = new Vector3(moveVector.x, moveDirection.y, moveVector.z);
+                if (IsDashing)
+                {
+                    moveDirection = new Vector3(0, moveDirection.y, 0);
+                }
+                else
+                {
+                    moveDirection = new Vector3(moveVector.x, moveDirection.y, moveVector.z);
+                }
                 characterController.Move(moveDirection * Time.deltaTime);
             }
         }
@@ -328,6 +338,7 @@ namespace EasyPeasyFirstPersonController
         {
             yield return new WaitForSeconds(DashCooldown);
             DashCooldownActive = false;
+            DashCooldownUI.text = "Dash Cooldown: " + DashCooldownActive.ToString();
         }
 
         // THIRD TIMES THE CHARM im losing it -- UPDATE IT WORKS YAYYYY!!!!
@@ -341,6 +352,7 @@ namespace EasyPeasyFirstPersonController
                 OngoingDashTime = DashDuration;
                 DashSpeed = sprintSpeed * DashSpeedMultiplier;
 
+                DashCooldownUI.text = "Dash Cooldown: " + DashCooldownActive.ToString();
             }
 
             if (IsDashing)
@@ -355,14 +367,19 @@ namespace EasyPeasyFirstPersonController
                 }
                 characterController.Move(DashDirection * DashSpeed * Time.deltaTime);
             }
+
+            //float targetFov = isSprinting ? sprintFov : (isSliding ? sprintFov + (slideFovBoost * Mathf.Lerp(0f, 1f, 1f - slideProgress)) : normalFov);
+            //currentFov = Mathf.SmoothDamp(currentFov, targetFov, ref fovVelocity, 1f / fovChangeSpeed);
+            //cam.fieldOfView = currentFov;
         }
 
         public void WantsToDashChecker()
         {
             // CanDash reqs
-            if (isSprinting && isGrounded && !IsDashing && !DashCooldownActive)
+            if (isSprinting && !IsDashing && !DashCooldownActive)
             { 
                 CanDash = true;
+                
                 if (CanDash && Input.GetKeyDown(DashKeybind) && !IsDashing)
                 { CoreDashMechanic(); }
             }
