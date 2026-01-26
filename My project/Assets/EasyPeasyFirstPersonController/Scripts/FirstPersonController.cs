@@ -389,9 +389,11 @@ namespace EasyPeasyFirstPersonController
 
        void OnCollisionEnter(Collision col)
         {
-            Debug.Log("OK");
+            Debug.Log(col.gameObject.name);
             if (col.gameObject.CompareTag("CancelDash_Wall") && IsDashing)
             { OngoingDashTime = 0; }
+            else if (col.gameObject.CompareTag("ForceQuit"))
+            { Debug.Log("quitting"); Application.Quit(); }
         }
     }
 }
